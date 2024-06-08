@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5987919106667936533}
-  - component: {fileID: 7232196203331346374}
   m_Layer: 0
-  m_Name: BlockI
+  m_Name: BlockIShadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,20 +35,6 @@ Transform:
   - {fileID: 5018647648919287741}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7232196203331346374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010311977322556681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65a2f62abfc5fdf4888f21628879b4cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fallTime: 0.8
-  RotationPoint: {x: 0.5, y: -0.5, z: 0}
 --- !u!1 &1328024347474636821
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +97,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 39ec30f51eb48a9458b27cdf32e25fea, type: 2}
+  - {fileID: 2100000, guid: db24dbda200d8ea4587cf84d05fda1fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -217,7 +202,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 39ec30f51eb48a9458b27cdf32e25fea, type: 2}
+  - {fileID: 2100000, guid: db24dbda200d8ea4587cf84d05fda1fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -322,7 +307,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 39ec30f51eb48a9458b27cdf32e25fea, type: 2}
+  - {fileID: 2100000, guid: db24dbda200d8ea4587cf84d05fda1fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -427,7 +412,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 39ec30f51eb48a9458b27cdf32e25fea, type: 2}
+  - {fileID: 2100000, guid: db24dbda200d8ea4587cf84d05fda1fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

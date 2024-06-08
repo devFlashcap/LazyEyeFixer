@@ -52,3 +52,12 @@ MonoBehaviour:
   - {fileID: 2405366668505808471, guid: 3fc8601c3435d2848b27005929a684b9, type: 3}
   - {fileID: 6432389599124035048, guid: 83c072ee4cdac1341a965794ccbcd3bc, type: 3}
   - {fileID: 7265403468542098453, guid: 87b3a3dae1b5fac4da729cb67bd1740d, type: 3}
+  BlockShadows:
+  - {fileID: 1010311977322556681, guid: d4b5a8239a23cc7438ea074c084108e8, type: 3}
+  - {fileID: 3528112311809703979, guid: 5cebbf9a37d97b54990a453fee348709, type: 3}
+  - {fileID: 5715392771406853210, guid: 454c2aa0fb86d8e4f8513f96e209663b, type: 3}
+  - {fileID: 8522679745076635074, guid: 4108ca908358fe949bf4c9b81719788b, type: 3}
+  - {fileID: 2405366668505808471, guid: 18ea31e8c69ce2d428ed89211bb37e60, type: 3}
+  - {fileID: 6432389599124035048, guid: c7cede4196e471441924d5e272c8fe52, type: 3}
+  - {fileID: 7265403468542098453, guid: b4f8e48f6f4a7f345a1e36588e01a3fd, type: 3}
+  ShadowBlock: {fileID: 0}
