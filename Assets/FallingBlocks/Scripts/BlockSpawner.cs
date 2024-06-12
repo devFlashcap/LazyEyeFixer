@@ -14,14 +14,8 @@ public class BlockSpawner : MonoBehaviour
     public GameObject CurrentBlock;
     private static int _heldBlockIndex;
 
-    public static int LeftEyeLayer;
-    public static int RightEyeLayer;
-
     void Start()
     {
-        LeftEyeLayer = LayerMask.NameToLayer("LeftEye");
-        RightEyeLayer = LayerMask.NameToLayer("RightEye");
-
         _blocksIndexes = Enumerable.Range(0, Blocks.Length).ToArray();
         _heldBlockIndex = -1;
 
@@ -33,7 +27,7 @@ public class BlockSpawner : MonoBehaviour
     {
         if(CurrentBlock != null)
         {
-            SetLayer(CurrentBlock, RightEyeLayer);
+            SetLayer(CurrentBlock, SettingsManager.FallingBlocksSettings.FallenBlockLayer);
         }
 
         _currentBlockIndex = GetNextBlock(onHold);
@@ -43,9 +37,9 @@ public class BlockSpawner : MonoBehaviour
         }
 
         CurrentBlock = Instantiate(Blocks[_currentBlockIndex], transform.position, Quaternion.identity);
-        Debug.Log($"child count: {CurrentBlock.transform.childCount}");
-        SetLayer(CurrentBlock, LeftEyeLayer);
+        SetLayer(CurrentBlock, SettingsManager.FallingBlocksSettings.FallingBlockLayer);
         ShadowBlock = Instantiate(BlockShadows[_currentBlockIndex], transform.position, Quaternion.identity);
+        SetLayer(ShadowBlock, SettingsManager.FallingBlocksSettings.ShadowLayer);
     }
 
     private void GenerateNewBag(int numberOfBags)
