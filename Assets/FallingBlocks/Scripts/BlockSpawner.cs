@@ -2,17 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlockSpawner : MonoBehaviour 
 {
     public GameObject[] Blocks;
     public GameObject[] BlockShadows;
+    public Sprite[] BlockSprites;
     private static Queue<int> _blockQueue = new Queue<int>();
     private static int[] _blocksIndexes;
     private static int _currentBlockIndex;
     public GameObject ShadowBlock;
     public GameObject CurrentBlock;
     private static int _heldBlockIndex;
+
+    public Image[] QueueImages;
 
     void Start()
     {
@@ -67,18 +71,22 @@ public class BlockSpawner : MonoBehaviour
 
     private int GetNextBlock(bool onHold)
     {
+        int nextBlockIndex = -1;
         if(onHold)
         {
             int prevHeldBlockIndex = _heldBlockIndex;
             _heldBlockIndex = _currentBlockIndex;
             Destroy(CurrentBlock);
             DestroyShadow();
-            return prevHeldBlockIndex != -1 ? prevHeldBlockIndex : _blockQueue.Dequeue();
+            nextBlockIndex = prevHeldBlockIndex != -1 ? prevHeldBlockIndex : _blockQueue.Dequeue();
         }
         else
         {
-            return _blockQueue.Dequeue();
+            nextBlockIndex = _blockQueue.Dequeue();
         }
+
+        UpdateQueueUI();
+        return nextBlockIndex;
     }
 
     public void SetLayer(GameObject gameObject, int layer)
@@ -87,6 +95,18 @@ public class BlockSpawner : MonoBehaviour
         foreach (Transform child in gameObject.transform)
         {
             child.gameObject.layer = layer;
+        }
+    }
+
+    private void UpdateQueueUI()
+    {
+        if(QueueImages.Length > 0)
+        {
+            int[] queueBlockIndexes = _blockQueue.Take(QueueImages.Length).ToArray();
+            for(int blockImageIndex = 0; blockImageIndex < QueueImages.Length; blockImageIndex++)
+            {
+                QueueImages[blockImageIndex].sprite = BlockSprites[queueBlockIndexes[blockImageIndex]];
+            }
         }
     }
 }
