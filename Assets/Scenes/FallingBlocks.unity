@@ -132,6 +132,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5997076247710246176, guid: d61c06419fc40824eb6cc9e1a440e1fd, type: 3}
+      propertyPath: HoldImage
+      value: 
+      objectReference: {fileID: 1229301045}
+    - target: {fileID: 5997076247710246176, guid: d61c06419fc40824eb6cc9e1a440e1fd, type: 3}
       propertyPath: BlockIcons.Array.size
       value: 7
       objectReference: {fileID: 0}

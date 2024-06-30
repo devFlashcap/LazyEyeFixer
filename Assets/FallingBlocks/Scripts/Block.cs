@@ -32,7 +32,7 @@ public class Block : MonoBehaviour
     bool rotate180ButtonState;
     bool downButtonState;
     bool dropButtonState;
-    float holdButtonState;
+    bool holdButtonState;
 
     private static int[,,,] wallKicks = new int[,,,]
     {
@@ -78,7 +78,7 @@ public class Block : MonoBehaviour
         _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCCWButtonStateNew);
         _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCWButtonStateNew);
         _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool rotate180ButtonStateNew);
-        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float holdButtonStateNew);
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool holdButtonStateNew);
         _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool downButtonStateNew);
         _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool dropButtonStateNew);
 
@@ -126,9 +126,8 @@ public class Block : MonoBehaviour
             _blockSpawner.DestroyShadow();
             transform.position = shadowPosition;
         }
-        else if (holdButtonState != holdButtonStateNew && holdButtonStateNew == 1f)
+        else if (!holdButtonStateNew && holdButtonState)
         {
-            //Debug.Log($"holdButtonState: {holdButtonStateNew}");
             _blockSpawner.SpawnNext(true);
         }
 

@@ -17,6 +17,7 @@ public class BlockSpawner : MonoBehaviour
     private static int _heldBlockIndex;
 
     public Image[] QueueImages;
+    public Image HoldImage;
 
     void Start()
     {
@@ -71,11 +72,12 @@ public class BlockSpawner : MonoBehaviour
 
     private int GetNextBlock(bool onHold)
     {
-        int nextBlockIndex = -1;
+        int nextBlockIndex;
         if(onHold)
         {
             int prevHeldBlockIndex = _heldBlockIndex;
             _heldBlockIndex = _currentBlockIndex;
+            HoldImage.sprite = BlockSprites[_heldBlockIndex];
             Destroy(CurrentBlock);
             DestroyShadow();
             nextBlockIndex = prevHeldBlockIndex != -1 ? prevHeldBlockIndex : _blockQueue.Dequeue();
