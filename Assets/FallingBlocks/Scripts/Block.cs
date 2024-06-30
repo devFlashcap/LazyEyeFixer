@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -21,6 +22,17 @@ public class Block : MonoBehaviour
     private static GameObject _gameManager;
     private static BlockSpawner _blockSpawner;
     private static ScoreManager _scoreManager;
+    private static InputDeviceManager _inputDeviceManager;
+
+    // Input states
+    bool leftButtonState;
+    bool rightButtonState;
+    bool rotateCWButtonState;
+    bool rotateCCWButtonState;
+    bool rotate180ButtonState;
+    bool downButtonState;
+    bool dropButtonState;
+    float holdButtonState;
 
     private static int[,,,] wallKicks = new int[,,,]
     {
@@ -51,6 +63,7 @@ public class Block : MonoBehaviour
     void Start()
     {
         _gameManager = FindObjectOfType<BlockSpawner>().gameObject;
+        _inputDeviceManager = _gameManager.GetComponent<InputDeviceManager>();
         _blockSpawner = _gameManager.GetComponent<BlockSpawner>();
         _scoreManager = _gameManager.GetComponent<ScoreManager>();
 
@@ -59,6 +72,94 @@ public class Block : MonoBehaviour
 
     void Update()
     {
+        #region VR
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool leftButtonStateNew);
+        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool rightButtonStateNew);
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCCWButtonStateNew);
+        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCWButtonStateNew);
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool rotate180ButtonStateNew);
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float holdButtonStateNew);
+        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool downButtonStateNew);
+        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool dropButtonStateNew);
+
+        if (leftButtonStateNew && 
+            Time.time - previousMoveTime > moveTime)
+        {
+            MoveBlock(-1);
+            moveTime = moveTime * 0.6f;
+            previousMoveTime = Time.time;
+        }
+
+        if (rightButtonStateNew &&
+            Time.time - previousMoveTime > moveTime)
+        {
+            MoveBlock(1);
+            moveTime = moveTime * 0.6f;
+            previousMoveTime = Time.time;
+        }
+
+        if (leftButtonState != leftButtonStateNew && !leftButtonStateNew)
+        {
+            previousMoveTime = defaultMoveTime;
+            moveTime = defaultMoveTime;
+        }
+        else if (rightButtonState != rightButtonStateNew && !rightButtonStateNew)
+        {
+            previousMoveTime = defaultMoveTime;
+            moveTime = defaultMoveTime;
+        }
+        else if (rotateCWButtonState != rotateCWButtonStateNew && rotateCWButtonStateNew)
+        {
+            TryRotate(-90);
+        }
+        else if (rotateCCWButtonState != rotateCCWButtonStateNew && rotateCCWButtonStateNew)
+        {
+            TryRotate(90);
+        }
+        else if (rotate180ButtonState != rotate180ButtonStateNew && rotate180ButtonStateNew)
+        {
+            TryRotate(-180);
+        }
+        else if (dropButtonState != dropButtonStateNew && dropButtonStateNew)
+        {
+            Vector3 shadowPosition = _blockSpawner.ShadowBlock.transform.position;
+            _blockSpawner.DestroyShadow();
+            transform.position = shadowPosition;
+        }
+        else if (holdButtonState != holdButtonStateNew && holdButtonStateNew == 1f)
+        {
+            //Debug.Log($"holdButtonState: {holdButtonStateNew}");
+            _blockSpawner.SpawnNext(true);
+        }
+
+        if (Time.time - previousFallTime > (downButtonStateNew ? fallTime / 10 : fallTime) || _blockSpawner.ShadowBlock == null)
+        {
+            transform.position += new Vector3(0, -1, 0);
+            if (!IsValidPosition())
+            {
+                _blockSpawner.DestroyShadow();
+                transform.position -= new Vector3(0, -1, 0);
+                AddToGrid();
+                ClearLines();
+                this.enabled = false;
+                _blockSpawner.SpawnNext();
+            }
+
+            previousFallTime = Time.time;
+        }
+
+        leftButtonState = leftButtonStateNew;
+        rightButtonState = rightButtonStateNew;
+        rotateCWButtonState = rotateCWButtonStateNew;
+        rotateCCWButtonState = rotateCCWButtonStateNew;
+        rotate180ButtonState = rotate180ButtonStateNew;
+        downButtonState = downButtonStateNew;
+        dropButtonState = dropButtonStateNew;
+        holdButtonState = holdButtonStateNew;
+
+        #endregion
+
+        #region keyboard
         if (Input.GetKey(KeyCode.LeftArrow) && Time.time - previousMoveTime > moveTime)
         {
             MoveBlock(-1);
@@ -117,6 +218,7 @@ public class Block : MonoBehaviour
 
             previousFallTime = Time.time;
         }
+        #endregion
     }
 
     private void MoveBlock(float moveX)
