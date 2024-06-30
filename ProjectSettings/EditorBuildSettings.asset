@@ -4,7 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 3a7bc7f0556f27b40af8b133d5d96383
+  - enabled: 1
+    path: Assets/Scenes/FallingBlocks.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: b513305896345cd47ab375cf1e1c77ca, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 5c4c2efadd506fd4f8fcfc58c247ebaa, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d348794c6ef72a247a0e76cc5d93add7, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: f5ccaa17abaaa24418ce60fb010fa79c, type: 2}
