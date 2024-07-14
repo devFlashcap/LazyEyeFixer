@@ -72,152 +72,104 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        #region VR
-        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool leftButtonStateNew);
-        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool rightButtonStateNew);
-        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCCWButtonStateNew);
-        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCWButtonStateNew);
-        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool rotate180ButtonStateNew);
-        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool holdButtonStateNew);
-        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool downButtonStateNew);
-        _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool dropButtonStateNew);
+        if(Time.timeScale > 0)
+        {
+            _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool leftButtonStateNew);
+            _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool rightButtonStateNew);
+            _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCCWButtonStateNew);
+            _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool rotateCWButtonStateNew);
+            _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool rotate180ButtonStateNew);
+            _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool holdButtonStateNew);
+            _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool downButtonStateNew);
+            _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool dropButtonStateNew);
 
-        if (leftButtonStateNew && 
-            Time.time - previousMoveTime > moveTime)
-        {
-            MoveBlock(-1);
-            moveTime = moveTime * 0.6f;
-            previousMoveTime = Time.time;
-        }
-
-        if (rightButtonStateNew &&
-            Time.time - previousMoveTime > moveTime)
-        {
-            MoveBlock(1);
-            moveTime = moveTime * 0.6f;
-            previousMoveTime = Time.time;
-        }
-
-        if (leftButtonState != leftButtonStateNew && !leftButtonStateNew)
-        {
-            previousMoveTime = defaultMoveTime;
-            moveTime = defaultMoveTime;
-        }
-        else if (rightButtonState != rightButtonStateNew && !rightButtonStateNew)
-        {
-            previousMoveTime = defaultMoveTime;
-            moveTime = defaultMoveTime;
-        }
-        else if (rotateCWButtonState != rotateCWButtonStateNew && rotateCWButtonStateNew)
-        {
-            TryRotate(-90);
-        }
-        else if (rotateCCWButtonState != rotateCCWButtonStateNew && rotateCCWButtonStateNew)
-        {
-            TryRotate(90);
-        }
-        else if (rotate180ButtonState != rotate180ButtonStateNew && rotate180ButtonStateNew)
-        {
-            TryRotate(-180);
-        }
-        else if (dropButtonState != dropButtonStateNew && dropButtonStateNew)
-        {
-            Vector3 shadowPosition = _blockSpawner.ShadowBlock.transform.position;
-            _blockSpawner.DestroyShadow();
-            transform.position = shadowPosition;
-        }
-        else if (!holdButtonStateNew && holdButtonState)
-        {
-            _blockSpawner.SpawnNext(true);
-        }
-
-        if (Time.time - previousFallTime > (downButtonStateNew ? fallTime / 10 : fallTime) || _blockSpawner.ShadowBlock == null)
-        {
-            transform.position += new Vector3(0, -1, 0);
-            if (!IsValidPosition())
+            if (leftButtonStateNew &&
+                Time.time - previousMoveTime > moveTime)
             {
-                _blockSpawner.DestroyShadow();
-                transform.position -= new Vector3(0, -1, 0);
-                AddToGrid();
-                ClearLines();
-                this.enabled = false;
-                _blockSpawner.SpawnNext();
+                MoveBlock(-1);
+                moveTime = moveTime * 0.6f;
+                previousMoveTime = Time.time;
             }
 
-            previousFallTime = Time.time;
-        }
-
-        leftButtonState = leftButtonStateNew;
-        rightButtonState = rightButtonStateNew;
-        rotateCWButtonState = rotateCWButtonStateNew;
-        rotateCCWButtonState = rotateCCWButtonStateNew;
-        rotate180ButtonState = rotate180ButtonStateNew;
-        downButtonState = downButtonStateNew;
-        dropButtonState = dropButtonStateNew;
-        holdButtonState = holdButtonStateNew;
-
-        #endregion
-
-        #region keyboard
-        if (Input.GetKey(KeyCode.LeftArrow) && Time.time - previousMoveTime > moveTime)
-        {
-            MoveBlock(-1);
-            moveTime = moveTime * 0.6f;
-            previousMoveTime = Time.time;
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow) && Time.time - previousMoveTime > moveTime)
-        {
-            MoveBlock(1);
-            moveTime = moveTime * 0.6f;
-            previousMoveTime = Time.time;
-        }
-
-        if(Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            previousMoveTime = defaultMoveTime;
-            moveTime = defaultMoveTime;
-        }
-        else if(Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            previousMoveTime = defaultMoveTime;
-            moveTime = defaultMoveTime;
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            TryRotate(-90);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            TryRotate(90);
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Vector3 shadowPosition = _blockSpawner.ShadowBlock.transform.position;
-            _blockSpawner.DestroyShadow();
-            transform.position = shadowPosition;
-        }
-        else if(Input.GetKeyDown(KeyCode.C))
-        {
-            _blockSpawner.SpawnNext(true);
-        }
-
-        if (Time.time - previousFallTime > (Input.GetKey(KeyCode.DownArrow) ? fallTime / 10 : fallTime) || _blockSpawner.ShadowBlock == null)
-        {
-            transform.position += new Vector3(0, -1, 0);
-            if (!IsValidPosition())
+            if (rightButtonStateNew &&
+                Time.time - previousMoveTime > moveTime)
             {
-                _blockSpawner.DestroyShadow();
-                transform.position -= new Vector3(0, -1, 0);
-                AddToGrid();
-                ClearLines();
-                this.enabled = false;
-                _blockSpawner.SpawnNext();
+                MoveBlock(1);
+                moveTime = moveTime * 0.6f;
+                previousMoveTime = Time.time;
             }
 
-            previousFallTime = Time.time;
+            if (!leftButtonStateNew && leftButtonState)
+            {
+                previousMoveTime = defaultMoveTime;
+                moveTime = defaultMoveTime;
+            }
+            else if (!rightButtonStateNew && rightButtonState)
+            {
+                previousMoveTime = defaultMoveTime;
+                moveTime = defaultMoveTime;
+            }
+            else if (!rotateCWButtonStateNew && rotateCWButtonState)
+            {
+                TryRotate(-90);
+            }
+            else if (!rotateCCWButtonStateNew && rotateCCWButtonState)
+            {
+                TryRotate(90);
+            }
+            else if (!rotate180ButtonStateNew && rotate180ButtonState)
+            {
+                TryRotate(-180);
+            }
+            else if (!dropButtonStateNew && dropButtonState)
+            {
+                Vector3 shadowPosition = _blockSpawner.ShadowBlock.transform.position;
+                _blockSpawner.DestroyShadow();
+                transform.position = shadowPosition;
+            }
+            else if (!holdButtonStateNew && holdButtonState)
+            {
+                _blockSpawner.SpawnNext(true);
+            }
+
+            if (Time.time - previousFallTime > (downButtonStateNew ? fallTime / 10 : fallTime) || _blockSpawner.ShadowBlock == null)
+            {
+                transform.position += new Vector3(0, -1, 0);
+                if (!IsValidPosition())
+                {
+                    transform.position -= new Vector3(0, -1, 0);
+                    _blockSpawner.DestroyShadow();
+                    if (IsGameOver())
+                    {
+                        GameOver();
+                    }
+                    else
+                    {
+                        AddToGrid();
+                        ClearLines();
+                        this.enabled = false;
+                        _blockSpawner.SpawnNext();
+                    }
+                }
+
+                previousFallTime = Time.time;
+            }
+
+            leftButtonState = leftButtonStateNew;
+            rightButtonState = rightButtonStateNew;
+            rotateCWButtonState = rotateCWButtonStateNew;
+            rotateCCWButtonState = rotateCCWButtonStateNew;
+            rotate180ButtonState = rotate180ButtonStateNew;
+            downButtonState = downButtonStateNew;
+            dropButtonState = dropButtonStateNew;
+            holdButtonState = holdButtonStateNew;
         }
-        #endregion
+    }
+
+    private void GameOver()
+    {
+        Time.timeScale = 0;
+        Debug.Log("Game Over");
     }
 
     private void MoveBlock(float moveX)
@@ -244,6 +196,17 @@ public class Block : MonoBehaviour
         }
 
         return true;
+    }
+
+    private bool IsGameOver()
+    {
+        foreach (Transform child in transform)
+        {
+            int y = Mathf.RoundToInt(child.transform.position.y);
+            if (y > 20) return true;
+        }
+
+        return false;
     }
 
     private void AddToGrid()
