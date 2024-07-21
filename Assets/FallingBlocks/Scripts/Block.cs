@@ -1,3 +1,4 @@
+using FallingBlocks.Menu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,15 +25,17 @@ public class Block : MonoBehaviour
     private static ScoreManager _scoreManager;
     private static InputDeviceManager _inputDeviceManager;
 
+    private static GameObject _pauseMenu;
+
     // Input states
     bool leftButtonState;
     bool rightButtonState;
     bool rotateCWButtonState;
     bool rotateCCWButtonState;
     bool rotate180ButtonState;
-    bool downButtonState;
     bool dropButtonState;
     bool holdButtonState;
+    bool pauseButtonState;
 
     private static int[,,,] wallKicks = new int[,,,]
     {
@@ -66,13 +69,22 @@ public class Block : MonoBehaviour
         _inputDeviceManager = _gameManager.GetComponent<InputDeviceManager>();
         _blockSpawner = _gameManager.GetComponent<BlockSpawner>();
         _scoreManager = _gameManager.GetComponent<ScoreManager>();
+        _pauseMenu = FindObjectOfType<PauseMenu>(true).gameObject;
 
         MoveShadow();
     }
 
     void Update()
     {
-        if(Time.timeScale > 0)
+        _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool pauseButtonStateNew);
+        if (!pauseButtonStateNew && pauseButtonState)
+        {
+            _pauseMenu.SetActive(!_pauseMenu.activeSelf);
+        }
+
+        pauseButtonState = pauseButtonStateNew;
+
+        if (Time.timeScale > 0)
         {
             _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool leftButtonStateNew);
             _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool rightButtonStateNew);
@@ -82,7 +94,7 @@ public class Block : MonoBehaviour
             _inputDeviceManager._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool holdButtonStateNew);
             _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool downButtonStateNew);
             _inputDeviceManager._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool dropButtonStateNew);
-
+            
             if (leftButtonStateNew &&
                 Time.time - previousMoveTime > moveTime)
             {
@@ -160,7 +172,6 @@ public class Block : MonoBehaviour
             rotateCWButtonState = rotateCWButtonStateNew;
             rotateCCWButtonState = rotateCCWButtonStateNew;
             rotate180ButtonState = rotate180ButtonStateNew;
-            downButtonState = downButtonStateNew;
             dropButtonState = dropButtonStateNew;
             holdButtonState = holdButtonStateNew;
         }
