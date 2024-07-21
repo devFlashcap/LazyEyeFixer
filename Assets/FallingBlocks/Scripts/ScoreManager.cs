@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
@@ -8,6 +9,8 @@ public class ScoreManager : MonoBehaviour
     public int[] PointsForLines = new int[4];
     private static GameObject _gameManager;
     private static LevelManager _levelManager;
+
+    public TMP_Text[] ScoreLabels;
 
     void Start()
     {
@@ -19,6 +22,12 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int linesCleared)
     {
         Score += PointsForLines[linesCleared - 1] *  _levelManager.Level;
-        Debug.Log(Score);
+        if(ScoreLabels != null && ScoreLabels.Length > 0)
+        {
+            foreach (var scoreLabel in ScoreLabels)
+            {
+                scoreLabel.text = $"Score: {Score}";
+            }
+        }
     }
 }
