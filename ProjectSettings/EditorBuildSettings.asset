@@ -12,6 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/FallingBlocks.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 77250c869c9e0044c9ba8b3e1579846d, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: b513305896345cd47ab375cf1e1c77ca, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 5c4c2efadd506fd4f8fcfc58c247ebaa, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d348794c6ef72a247a0e76cc5d93add7, type: 2}
