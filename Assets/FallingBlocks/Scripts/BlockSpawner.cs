@@ -16,11 +16,19 @@ public class BlockSpawner : MonoBehaviour
     public GameObject CurrentBlock;
     private static int _heldBlockIndex;
 
+    private static int _fallingBlockLayer;
+    private static int _fallenBlockLayer;
+    private static int _shadowLayer;
+
     public Image[] QueueImages;
     public Image HoldImage;
 
     void Start()
     {
+        _fallingBlockLayer = PlayerPrefs.GetInt("FallingBlocksSettings.FallingBlockLayer", (int)EyeLayers.LeftEye);
+        _shadowLayer = PlayerPrefs.GetInt("FallingBlocksSettings.ShadowLayer", (int)EyeLayers.Both);
+        _fallenBlockLayer = PlayerPrefs.GetInt("FallingBlocksSettings.FallenBlockLayer", (int)EyeLayers.RightEye);
+
         _blocksIndexes = Enumerable.Range(0, Blocks.Length).ToArray();
         _heldBlockIndex = -1;
 
@@ -32,7 +40,7 @@ public class BlockSpawner : MonoBehaviour
     {
         if(CurrentBlock != null)
         {
-            SetLayer(CurrentBlock, SettingsManager.FallingBlocksSettings.FallenBlockLayer);
+            SetLayer(CurrentBlock, _fallenBlockLayer);
         }
 
         _currentBlockIndex = GetNextBlock(onHold);
@@ -42,9 +50,9 @@ public class BlockSpawner : MonoBehaviour
         }
 
         CurrentBlock = Instantiate(Blocks[_currentBlockIndex], transform.position, Quaternion.identity);
-        SetLayer(CurrentBlock, SettingsManager.FallingBlocksSettings.FallingBlockLayer);
+        SetLayer(CurrentBlock, _fallingBlockLayer);
         ShadowBlock = Instantiate(BlockShadows[_currentBlockIndex], transform.position, Quaternion.identity);
-        SetLayer(ShadowBlock, SettingsManager.FallingBlocksSettings.ShadowLayer);
+        SetLayer(ShadowBlock, _shadowLayer);
     }
 
     private void GenerateNewBag(int numberOfBags)

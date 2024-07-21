@@ -5,14 +5,19 @@ namespace FallingBlocks.Menu
 {
     public class GameOverMenu : MonoBehaviour
     {
-        private void Awake()
+        private void OnEnable()
         {
             Time.timeScale = 0f;
         }
 
+        private void OnDisable()
+        {
+            Time.timeScale = 1f;
+        }
+
         public void NewGame()
         {
-            SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+            SceneManager.LoadScene("FallingBlocks", LoadSceneMode.Single);
         }
 
         public void Quit()

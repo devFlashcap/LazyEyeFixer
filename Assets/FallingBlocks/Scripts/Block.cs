@@ -26,6 +26,7 @@ public class Block : MonoBehaviour
     private static InputDeviceManager _inputDeviceManager;
 
     private static GameObject _pauseMenu;
+    private static GameObject _gameOverMenu;
 
     // Input states
     bool leftButtonState;
@@ -70,6 +71,7 @@ public class Block : MonoBehaviour
         _blockSpawner = _gameManager.GetComponent<BlockSpawner>();
         _scoreManager = _gameManager.GetComponent<ScoreManager>();
         _pauseMenu = FindObjectOfType<PauseMenu>(true).gameObject;
+        _gameOverMenu = FindObjectOfType<GameOverMenu>(true).gameObject;
 
         MoveShadow();
     }
@@ -153,7 +155,7 @@ public class Block : MonoBehaviour
                     _blockSpawner.DestroyShadow();
                     if (IsGameOver())
                     {
-                        GameOver();
+                        _gameOverMenu.SetActive(true);
                     }
                     else
                     {
@@ -175,12 +177,6 @@ public class Block : MonoBehaviour
             dropButtonState = dropButtonStateNew;
             holdButtonState = holdButtonStateNew;
         }
-    }
-
-    private void GameOver()
-    {
-        Time.timeScale = 0;
-        Debug.Log("Game Over");
     }
 
     private void MoveBlock(float moveX)
